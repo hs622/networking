@@ -1,21 +1,12 @@
 "use client";
 
-import { ChatSidebar } from "@/components/chat-sidebar";
+import Navbar from "@/components/navbar";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { capitalize, truncateText } from "@/lib/helper";
 import Chatbox from "@/components/chat-box";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { useState } from "react";
 
 export interface ChatHeader {
   id: string;
@@ -37,7 +28,7 @@ export type Chats = {
 const chatsData: Chats[] = [
   {
     head: {
-      id: "",
+      id: "645a9c18f1c2a1d3b4e9fa02",
       opponent: "hassan ali",
     },
     data: [
@@ -105,7 +96,7 @@ const chatsData: Chats[] = [
   },
   {
     head: {
-      id: "",
+      id: "645a9c18f1c2a1d3b4e9fa5",
       opponent: "alishah saleem",
     },
     data: [
@@ -167,7 +158,7 @@ const chatsData: Chats[] = [
   },
   {
     head: {
-      id: "",
+      id: "645a9c18f1c2a1d3b4e9fa9",
       opponent: "ferid hamid",
     },
     data: [
@@ -236,46 +227,95 @@ const chatsData: Chats[] = [
 ];
 
 export default function ConsolePage() {
-  const [chat, setChat] = useState<number | null>(null);
-  
+  const [chat, setChat] = useState<string | null>();
+  const [conversation, setConversation] = useState<Chats>();
+
+  useEffect(() => {
+    if (chat) {
+      const value = chatsData.find((singleChat) => singleChat.head.id == chat);
+      setConversation(value);
+    }
+  }, [chat]);
+
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "360px",
-        } as React.CSSProperties
-      }
-    >
-      <ChatSidebar chats={chatsData} setChat={setChat} />
-      <SidebarInset className="h-screen overflow-hidden">
-        <header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <Breadcrumb>
-            <BreadcrumbList>
-              {/* <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
-              </BreadcrumbItem> */}
-              {/* <BreadcrumbSeparator className="hidden md:block" /> */}
-              <BreadcrumbItem>
-                <BreadcrumbPage>Inbox</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </header>
-        <div className="flex flex-1 flex-col gap-4">
-          <div className="w-[50em] mx-auto">
-            {chat ? (
-              <Chatbox chat={chatsData[chat as number]} />
-            ) : (
-              "start conversion."
-            )}
+    <div className="h-screen overflow-hidden">
+      <Navbar />
+      <div className={"group/sidebar-wrapper flex min-h-svh w-[80%] mx-auto"}>
+        {/* sidebar */}
+        <div
+          className={
+            "bg-sidebar border-x-1 flex flex-col h-[calc(100vh-64px)] min-w-[360px] overflow-hidden"
+          }
+        >
+          <div className={"flex h-full flex-col flex-1 md:flex"}>
+            {/* header */}
+            <div className="flex flex-col gap-3.5 border-b p-4">
+              <div className="flex w-full items-center justify-between">
+                <div className="text-foreground text-base font-medium">
+                  Inbox
+                </div>
+                <Label className="flex items-center gap-2 text-sm">
+                  <span>Unreads</span>
+                  <Switch className="shadow-none" />
+                </Label>
+              </div>
+              <Input
+                placeholder="Type to search..."
+                className={"bg-background h-8 w-full shadow-none"}
+              />
+            </div>
+
+            {/* body */}
+            <div className={"flex min-h-0 flex-1 flex-col gap-2 overflow-auto"}>
+              <div className={"relative flex w-full min-w-0 flex-col p-2 px-0"}>
+                <div className={"w-full text-sm"}>
+                  {chatsData.map((chat, index) => (
+                    <a
+                      href="#"
+                      onClick={() => setChat(chat.head.id)}
+                      key={index}
+                      className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap last:border-b-0"
+                    >
+                      <div className="flex w-full items-center gap-2">
+                        <span className="font-medium">
+                          {capitalize(chat.head.opponent)}
+                        </span>{" "}
+                        <span className="ml-auto text-xs">
+                          {chat.data.at(-1)?.timestamp}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {chat.data.at(-1)?.fromSelf && (
+                          <span className="text-xs">You: </span>
+                        )}
+                        <span className="line-clamp-2 w-[260px] text-xs whitespace-break-spaces">
+                          {truncateText(chat.data.at(-1)?.body as string, 40)}
+                        </span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+
+        {/* chat box */}
+        <div className="h-screen w-full overflow-hidden">
+          <div className="flex flex-1 flex-col gap-4">
+            <div className="w-[50em] mx-auto">
+              {chat ? (
+                <Chatbox chat={conversation} />
+              ) : (
+                <div className="flex flex-col gap-4 justify-center items-center h-[calc(100vh-65px)]">
+                  <div className="font-medium text-4xl">Start conversation today!</div>
+                  <div className="font-light text-3xl">build your connections</div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
