@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { SendHorizontal } from "lucide-react";
-import { Chats } from "@/app/console/page";
+import { Chats } from "@/app/messaging/page";
 import { capitalize, initials } from "@/lib/helper";
 
 const Chatbox = ({ chat }: { chat: Chats }) => {

@@ -10,7 +10,7 @@ import {
   SidebarHeader,
   SidebarInput,
 } from "@/components/ui/sidebar";
-import { Chats } from "@/app/console/page";
+import { Chats } from "@/app/messaging/page";
 import { capitalize, truncateText } from "@/lib/helper";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
