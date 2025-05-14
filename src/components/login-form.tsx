@@ -9,11 +9,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LoginBtn from "./login-button";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -74,9 +76,7 @@ export function LoginForm({
                   </div>
                   <Input id="password" type="password" defaultValue={'123456789'} required />
                 </div>
-                <Button type="submit" className="w-full">
-                  Login
-                </Button>
+                <LoginBtn />
               </div>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
