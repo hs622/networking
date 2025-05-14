@@ -2,18 +2,13 @@
 
 import * as React from "react";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarHeader,
-  SidebarInput,
-} from "@/components/ui/sidebar";
+import { Sidebar } from "@/components/ui/sidebar";
 import { Chats } from "@/app/messaging/page";
 import { capitalize, truncateText } from "@/lib/helper";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
+import { Input } from "./ui/input";
+import { cn } from "@/lib/utils";
 
 export function ChatSidebar({
   chats,
@@ -25,19 +20,19 @@ export function ChatSidebar({
   props?: React.ComponentProps<typeof Sidebar>;
 }) {
   return (
-    <Sidebar
-      collapsible="icon"
-      className="overflow-hidden *:data-[sidebar=sidebar]:flex-row"
+    <div
+      className={
+        "bg-sidebar text-sidebar-foreground flex h-max w-[360px] flex-col overflow-hidden "
+      }
       {...props}
     >
-      {/* This is the first sidebar */}
-      {/* We disable collapsible and adjust width to icon. */}
-      {/* This will make the sidebar appear as icons. */}
-
-      {/* This is the second sidebar */}
-      {/* We disable collapsible and let it fill remaining space */}
-      <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-        <SidebarHeader className="gap-3.5 border-b p-4">
+      <div
+        className={
+          "bg-sidebar text-sidebar-foreground flex h-full flex-col flex-1 md:flex"
+        }
+      >
+        {/* header */}
+        <div className="flex flex-col gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
             <div className="text-foreground text-base font-medium">Inbox</div>
             <Label className="flex items-center gap-2 text-sm">
@@ -45,11 +40,20 @@ export function ChatSidebar({
               <Switch className="shadow-none" />
             </Label>
           </div>
-          <SidebarInput placeholder="Type to search..." />
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup className="px-0">
-            <SidebarGroupContent>
+          <Input
+            placeholder="Type to search..."
+            className={cn("bg-background h-8 w-full shadow-none")}
+          />
+        </div>
+
+        {/* body */}
+        <div
+          className={cn(
+            "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden"
+          )}
+        >
+          <div className={cn("relative flex w-full min-w-0 flex-col p-2 px-0")}>
+            <div className={cn("w-full text-sm")}>
               {chats.map((chat, index) => (
                 <a
                   href="#"
@@ -75,10 +79,10 @@ export function ChatSidebar({
                   </div>
                 </a>
               ))}
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    </Sidebar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

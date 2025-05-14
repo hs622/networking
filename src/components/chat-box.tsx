@@ -1,6 +1,5 @@
 "use client";
 
-import React, { Fragment, KeyboardEvent, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
@@ -8,36 +7,26 @@ import { SendHorizontal } from "lucide-react";
 import { Chats } from "@/app/messaging/page";
 import { capitalize, initials } from "@/lib/helper";
 
-const Chatbox = ({ chat }: { chat: Chats }) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [message, setMessage] = useState("");
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    event.preventDefault();
-    if (event.key == "Enter" && !event.shiftKey) {
-      console.log(message);
-
-      setMessage("");
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
-        textareaRef.current.value = "";
-      }
-    }
-  };
-
+const Chatbox = ({ chat }: { chat: Chats | undefined }) => {
   return (
-    <Fragment>
+    <>
       {/* Chat header */}
       <div className="border-b-1 mb-2 p-4 flex justify-between items-center">
         {/* right side */}
         <div className="flex gap-2 justify-center items-center">
-          <Avatar>
-            <AvatarImage src={""} />
-            <AvatarFallback className="text-xs font-medium">
-              {initials(chat.head.opponent)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="font-semibold">{capitalize(chat.head.opponent)}</div>
+          {chat && (
+            <>
+              <Avatar>
+                <AvatarImage src={""} />
+                <AvatarFallback className="text-xs font-medium">
+                  {initials(chat.head.opponent)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="font-semibold">
+                {capitalize(chat.head.opponent)}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Left side */}
@@ -46,7 +35,7 @@ const Chatbox = ({ chat }: { chat: Chats }) => {
 
       {/* Chat section */}
       <div className="h-[calc(100vh-220px)] overflow-y-auto scrollbar-hidden">
-        {chat.data.map((msg, index) => (
+        {chat && chat.data.map((msg, index) => (
           <div
             key={index}
             className={`flex ${
@@ -75,15 +64,12 @@ const Chatbox = ({ chat }: { chat: Chats }) => {
         <Textarea
           className="max-h-10 resize-none"
           placeholder={"Type a message"}
-          ref={textareaRef}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
         />
         <Button className="bg-green-600">
           <SendHorizontal />
         </Button>
       </div>
-    </Fragment>
+    </>
   );
 };
 

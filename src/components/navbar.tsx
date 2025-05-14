@@ -16,9 +16,12 @@ const Navbar = () => {
     <div className="border-b-1">
       <div className="flex md:w-[80%] mx-auto justify-between items-center h-[4rem]">
         <div className="flex items-center gap-2">
-          <div>logo</div>
+          <div>Work</div>
           <div>
-            <Button variant={"link"} className="cursor-pointer">
+            <Button
+              variant={"link"}
+              className="cursor-pointer text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            >
               <Search />
             </Button>
           </div>
@@ -26,6 +29,14 @@ const Navbar = () => {
 
         <div className="flex items-center gap-8">
           <div className="flex gap-4">
+            <Link
+              href={"/feed"}
+              className={`inline-flex items-center hover:underline text-sm font-medium cursor-pointer text-gray-500 hover:text-gray-700 p-0 underline-offset-4 ${
+                pathname == "/feed" && "text-gray-700"
+              }`}
+            >
+              Feed
+            </Link>
             <Link
               href={"/messaging"}
               className={`inline-flex items-center hover:underline text-sm font-medium cursor-pointer text-gray-500 hover:text-gray-700 p-0 underline-offset-4 ${
